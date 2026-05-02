@@ -2,7 +2,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Kare Lojistik v13 | Güvenli & Pro Sistem</title>
+    <title>KARE LOJİSTİK | Güvenli & Pro Sistem</title>
     
     <!-- CSS & Kütüphaneler -->
     <script src="https://cdn.tailwindcss.com"></script>
@@ -29,13 +29,24 @@
         .hide-scrollbar::-webkit-scrollbar { display: none; } .hide-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
         @media print { body { background: white !important; } .no-print { display: none !important; } .glass-card { box-shadow: none !important; border: 1px solid #000 !important; } }
         
-        #splashScreen { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: #0F172A; z-index: 9999; display: flex; flex-direction: column; justify-content: center; align-items: center; transition: opacity 0.8s ease-out; }
-        .splash-logo { font-size: 5rem; color: #4F46E5; animation: pulseGlow 2s infinite; }
-        .splash-title { margin-top: 1.5rem; color: #FFFFFF; font-size: 2rem; font-weight: 800; letter-spacing: 2px; text-align: center; }
-        .loader-bar { width: 250px; height: 4px; background: #1E293B; margin-top: 30px; border-radius: 2px; overflow: hidden; position: relative; }
-        .loader-fill { height: 100%; background: #4F46E5; width: 0%; animation: loadProgress 2.2s forwards ease-in-out; }
-        @keyframes pulseGlow { 0%, 100% { transform: scale(1); text-shadow: 0 0 10px rgba(79, 70, 229, 0.5); } 50% { transform: scale(1.05); text-shadow: 0 0 30px rgba(79, 70, 229, 0.9); } }
-        @keyframes loadProgress { 0% { width: 0%; } 50% { width: 60%; } 100% { width: 100%; } }
+        /* ===== YENİ TIR ANİMASYONU VE AÇILIŞ EKRANI ===== */
+        #splashScreen { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: #0F172A; z-index: 9999; display: flex; flex-direction: column; justify-content: center; align-items: center; transition: opacity 0.8s ease-out; overflow: hidden; }
+        
+        .splash-truck-container { font-size: 6rem; color: #4F46E5; filter: drop-shadow(0 0 15px rgba(79, 70, 229, 0.6)); animation: driveIn 1.2s cubic-bezier(0.1, 0.8, 0.3, 1) forwards; }
+        .splash-text-container { display: flex; flex-direction: column; align-items: center; opacity: 0; animation: fadeInText 1s ease-out forwards; animation-delay: 1.2s; }
+        .splash-title { margin-top: 1rem; color: #FFFFFF; font-size: 2.2rem; font-weight: 800; letter-spacing: 3px; text-align: center; }
+        
+        .loader-bar { width: 250px; height: 4px; background: #1E293B; margin-top: 25px; border-radius: 2px; overflow: hidden; position: relative; }
+        .loader-fill { height: 100%; background: #4F46E5; width: 0%; animation: loadProgress 2s forwards ease-in-out; animation-delay: 1.2s; }
+        
+        @keyframes driveIn {
+            0% { transform: translateX(-150vw) skewX(-15deg); }
+            70% { transform: translateX(20px) skewX(5deg); }
+            100% { transform: translateX(0) skewX(0); }
+        }
+        @keyframes fadeInText { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+        @keyframes loadProgress { 0% { width: 0%; } 50% { width: 70%; } 100% { width: 100%; } }
+        /* ================================================ */
 
         #loginScreen { position: fixed; inset: 0; background: #0F172A; z-index: 9000; display: flex; flex-direction: column; justify-content: center; align-items: center; }
         #pdfWrapper { position: fixed; top: 200vh; left: 0; width: 800px; background-color: #ffffff; z-index: -100; pointer-events: none; }
@@ -51,11 +62,16 @@
 </head>
 <body class="antialiased min-h-screen flex flex-col overflow-hidden" id="appBody">
 
+    <!-- YENİ AÇILIŞ ANİMASYONU -->
     <div id="splashScreen">
-        <i class="fa-solid fa-shield-halved splash-logo"></i>
-        <h1 class="splash-title">KARE LOJİSTİK</h1>
-        <p class="text-[#94A3B8] text-sm font-bold tracking-widest mt-2">GÜVENLİ SİSTEM BAĞLANTISI</p>
-        <div class="loader-bar"><div class="loader-fill"></div></div>
+        <div class="splash-truck-container">
+            <i class="fa-solid fa-truck-fast"></i>
+        </div>
+        <div class="splash-text-container">
+            <h1 class="splash-title">KARE LOJİSTİK</h1>
+            <p class="text-[#94A3B8] text-sm font-bold tracking-widest mt-1">GÜVENLİ SİSTEM BAĞLANTISI</p>
+            <div class="loader-bar"><div class="loader-fill"></div></div>
+        </div>
     </div>
 
     <!-- GİRİŞ EKRANI -->
@@ -106,7 +122,7 @@
 
     <main class="flex-grow container mx-auto px-4 py-6 max-w-6xl opacity-0 transition-opacity duration-1000" id="mainContent">
 
-        <!-- ==================== PATRON PANELİ ==================== -->
+        <!-- ==================== 0. PATRON PANELİ ==================== -->
         <div id="panel-PATRON" class="panel-section hidden-panel">
             <div class="mb-4 flex items-center justify-between"><div><h2 class="text-2xl font-bold text-slate-800"><i class="fa-solid fa-chart-line text-indigo-500 mr-2"></i>İş Zekası & Yönetim Ekranı</h2></div></div>
             <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-4 mb-6">
@@ -125,7 +141,7 @@
             </div>
         </div>
 
-        <!-- ==================== ŞOFÖR PANELİ ==================== -->
+        <!-- ==================== 1. ŞOFÖR PANELİ ==================== -->
         <div id="panel-DRIVER" class="panel-section hidden-panel">
             <div class="glass-card p-4 mb-6 border-l-4 border-emerald-500 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3 bg-emerald-50" id="tripStartBox">
                 <div><h3 class="font-bold text-emerald-800 text-sm"><i class="fa-solid fa-route mr-1"></i> Yeni Sefere Çık</h3><p class="text-[10px] text-emerald-600 mt-1">Araç plakaları personel kaydından otomatik getirilir.</p></div>
@@ -178,7 +194,7 @@
             </div>
         </div>
 
-        <!-- ==================== OPERASYON BÖLÜMÜ ==================== -->
+        <!-- ==================== 2. OPERASYON BÖLÜMÜ ==================== -->
         <div id="panel-OPERATIONS" class="panel-section hidden-panel">
             <div class="glass-card p-5">
                 <h3 class="font-bold text-slate-800 text-lg mb-4">Onay Bekleyen Masraflar</h3>
@@ -206,7 +222,7 @@
             </div>
         </div>
 
-        <!-- ==================== MUHASEBE / CARİ BÖLÜMÜ ==================== -->
+        <!-- ==================== 3. MUHASEBE / CARİ BÖLÜMÜ ==================== -->
         <div id="panel-ACCOUNTING" class="panel-section hidden-panel">
             <div class="grid grid-cols-1 lg:grid-cols-2 gap-4 mb-6 no-print">
                 <div class="glass-card p-5 bg-gradient-to-br from-white to-blue-50 border-blue-100">
@@ -248,7 +264,7 @@
             </div>
         </div>
 
-        <!-- ==================== SEFER RAPORLARI ==================== -->
+        <!-- ==================== 4. SEFER RAPORLARI ==================== -->
         <div id="panel-DASHBOARD" class="panel-section hidden-panel">
             <div class="glass-card p-6">
                 <div class="flex flex-col md:flex-row justify-between items-start md:items-center mb-4 border-b border-slate-100 pb-4 gap-3">
@@ -266,7 +282,7 @@
             </div>
         </div>
 
-        <!-- ==================== AYARLAR & KULLANICI YÖNETİMİ ==================== -->
+        <!-- ==================== 5. AYARLAR & KULLANICI YÖNETİMİ ==================== -->
         <div id="panel-USERS" class="panel-section hidden-panel">
             
             <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
@@ -275,7 +291,7 @@
                     <h3 class="font-bold text-slate-800 text-lg mb-1"><i class="fa-solid fa-key text-amber-500 mr-2"></i>Şifremi Değiştir</h3>
                     <p class="text-[10px] text-slate-500 mb-4">Kendi hesabınızın giriş şifresini güvenle güncelleyin.</p>
                     <form id="changePassForm" onsubmit="changePassword(event); return false;" class="space-y-3">
-                        <input type="password" id="newPass" required placeholder="Yeni Şifre (En az 6 karakter)" class="input-style border border-slate-200">
+                        <input type="password" id="newPass" required placeholder="Yeni Şifre" class="input-style border border-slate-200">
                         <input type="password" id="newPass2" required placeholder="Yeni Şifre (Tekrar)" class="input-style border border-slate-200">
                         <button type="submit" id="changePassBtn" class="w-full bg-amber-500 hover:bg-amber-600 text-white py-2.5 rounded-xl font-bold shadow-md transition-all"><i class="fa-solid fa-lock mr-1"></i> Şifreyi Güncelle</button>
                     </form>
@@ -323,7 +339,7 @@
             </div>
         </div>
 
-        <!-- ==================== ANALİTİK & RAPORLAR ==================== -->
+        <!-- ==================== 6. ANALİTİK & RAPORLAR ==================== -->
         <div id="panel-ANALYTICS" class="panel-section hidden-panel">
 
             <div class="glass-card p-5 mb-6">
@@ -547,7 +563,6 @@
 
     <!-- =============== GÜVENLİ MİMARİ JS =============== -->
     <script>
-        // CONFIG - EKLENEN YENİ URL İLE BERABER
         const firebaseConfig = {
             apiKey: "AIzaSyBXlr2DGdcoT8_MLzcGFHomnbZyyfuQBto",
             authDomain: "kare-6172d.firebaseapp.com",
@@ -562,7 +577,6 @@
         if (!firebase.apps.length) { firebase.initializeApp(firebaseConfig); }
         const secondaryApp = firebase.initializeApp(firebaseConfig, "Secondary");
 
-        // Sistemin kalbi Firestore'dur
         const db = firebase.firestore();
         const auth = firebase.auth();
 
@@ -578,7 +592,6 @@
         let pieChartInstance = null; let trendChartInstance = null;
         let listeners = []; 
 
-        // XSS KORUMA FİLTRESİ
         const esc = (str) => { if (str === null || str === undefined) return ''; return String(str).replace(/[&<>"']/g, (m) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' })[m]); };
         const formatMoney = (amt, cur) => `<span class="font-bold">${parseFloat(amt).toLocaleString('tr-TR', {minimumFractionDigits:2, maximumFractionDigits:2})}</span> <span class="text-[10px] text-slate-500 ml-0.5">${cur}</span>`;
         const formatPdfMoney = (amt, cur) => parseFloat(amt).toLocaleString('tr-TR', {minimumFractionDigits:2, maximumFractionDigits:2}) + ' ' + cur;
@@ -591,10 +604,11 @@
                 document.getElementById('rememberMe').checked = true;
             }
 
+            // Yeni tır animasyonu süresi 3.5 saniye
             setTimeout(() => { 
                 const splash = document.getElementById('splashScreen'); splash.style.opacity = '0'; 
                 setTimeout(() => { splash.style.display = 'none'; }, 800); 
-            }, 2500); 
+            }, 3500); 
 
             auth.onAuthStateChanged(user => {
                 if(user) {
@@ -615,7 +629,6 @@
 
         function getFakeEmail(username) { return username.replace(/\s+/g,'').toLowerCase() + "@kare.com"; }
 
-        // GİRİŞ ALGORİTMASI: 6 Karakter Sorunu Kesin Çözümü
         async function handleLogin(e) {
             if(e) e.preventDefault();
             const un = document.getElementById('loginUser').value.trim(); 
@@ -626,7 +639,6 @@
 
             try {
                 const email = getFakeEmail(un);
-                // Şifre 6 haneden kısaysa arka planda gizlice sıfır ekler
                 const securePw = pw.length >= 6 ? pw : pw + "000000".substring(0, 6 - pw.length);
 
                 await auth.setPersistence(rem ? firebase.auth.Auth.Persistence.LOCAL : firebase.auth.Auth.Persistence.SESSION);
@@ -635,10 +647,8 @@
                 else localStorage.removeItem('kare_saved_user');
 
                 try {
-                    // Normal giriş dene
                     await auth.signInWithEmailAndPassword(email, securePw);
                 } catch (authError) {
-                    // Eğer kullanıcı bulunamadıysa ve giren KURUCU ise (Tanju), hesabı güvenle oluştur
                     if (un.toLowerCase() === 'tanju' && pw === '1063') {
                         try {
                             const res = await auth.createUserWithEmailAndPassword(email, securePw);
@@ -746,7 +756,6 @@
             const btn = document.getElementById('addUserBtn'); btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Ekleniyor...'; btn.disabled = true;
             try {
                 const email = getFakeEmail(un);
-                // Kullanıcı şifreyi kısa girerse otomatik 6 haneye tamamla
                 const securePw = pw.length >= 6 ? pw : pw + "000000".substring(0, 6 - pw.length);
 
                 const res = await secondaryApp.auth().createUserWithEmailAndPassword(email, securePw);
