@@ -1,4 +1,3 @@
-<!DOCTYPE html>
 <html lang="tr">
 <head>
     <meta charset="UTF-8">
@@ -19,20 +18,24 @@
         tailwind.config = { theme: { extend: { fontFamily: { sans: ['"Plus Jakarta Sans"', 'sans-serif'] }, colors: { primary: '#4F46E5', secondary: '#0F172A', surface: '#FFFFFF', background: '#F8FAFC' } } } }
     </script>
     <style>
-        body { background-color: #F8FAFC; color: #334155; -webkit-tap-highlight-color: transparent; }
+        body { background-color: #F8FAFC; color: #334155; -webkit-tap-highlight-color: transparent; max-width: 100vw; overflow-x: hidden; }
         .glass-card { background: #FFFFFF; border: 1px solid #E2E8F0; border-radius: 1.25rem; box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -1px rgba(0, 0, 0, 0.03); }
         .input-style { width: 100%; background-color: #F1F5F9; border: 1px solid transparent; border-radius: 0.75rem; padding: 0.75rem 1rem; font-size: 0.875rem; color: #0F172A; transition: all 0.2s; outline: none; }
         .input-style:focus { background-color: #FFFFFF; border-color: #4F46E5; box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.1); }
         .wallet-card { background: linear-gradient(135deg, #1E1B4B 0%, #4F46E5 100%); color: white; border-radius: 1.25rem; padding: 1.5rem; box-shadow: 0 10px 15px -3px rgba(79, 70, 229, 0.3); }
         ::-webkit-scrollbar { width: 6px; height: 6px; } ::-webkit-scrollbar-thumb { background: #CBD5E1; border-radius: 3px; }
+        
+        /* Mobil taşmayı engellemek için scrollbar gizleme sınıfı */
+        .hide-scrollbar::-webkit-scrollbar { display: none; }
+        .hide-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+
         @media print { body { background: white !important; } .no-print { display: none !important; } .glass-card { box-shadow: none !important; border: 1px solid #000 !important; } }
         
-        .patron-active .hide-from-patron { display: none !important; }
-        .patron-active .col-expand-patron { grid-column: span 3 / span 3 !important; }
+        /* Patron kısıtlamaları kaldırıldı - Patron her şeyi admin gibi görür */
 
         #splashScreen { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: #0F172A; z-index: 9999; display: flex; flex-direction: column; justify-content: center; align-items: center; transition: opacity 0.8s ease-out; }
         .splash-logo { font-size: 5rem; color: #4F46E5; animation: pulseGlow 2s infinite; }
-        .splash-title { margin-top: 1.5rem; color: #FFFFFF; font-size: 2rem; font-weight: 800; letter-spacing: 2px; }
+        .splash-title { margin-top: 1.5rem; color: #FFFFFF; font-size: 2rem; font-weight: 800; letter-spacing: 2px; text-align: center; }
         .loader-bar { width: 250px; height: 4px; background: #1E293B; margin-top: 30px; border-radius: 2px; overflow: hidden; position: relative; }
         .loader-fill { height: 100%; background: #4F46E5; width: 0%; animation: loadProgress 2.2s forwards ease-in-out; }
         @keyframes pulseGlow { 0%, 100% { transform: scale(1); text-shadow: 0 0 10px rgba(79, 70, 229, 0.5); } 50% { transform: scale(1.05); text-shadow: 0 0 30px rgba(79, 70, 229, 0.9); } }
@@ -43,9 +46,9 @@
         #pdfTemplate { background: white; color: #1e293b; font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; padding: 40px; }
 
         .modal { display: none; position: fixed; z-index: 1000; left: 0; top: 0; width: 100%; height: 100%; background-color: rgba(15, 23, 42, 0.9); backdrop-filter: blur(4px); justify-content: center; align-items: center;}
-        .modal-content { background: white; display: block; width: 90%; max-width: 450px; border-radius: 16px; box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5); position: relative; padding: 24px;}
+        .modal-content { background: white; display: block; width: 90%; max-width: 450px; border-radius: 16px; box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5); position: relative; padding: 24px; max-height: 90vh; overflow-y: auto;}
         .modal-content-wide { max-width: 600px; }
-        .close-modal { position: absolute; top: 15px; right: 20px; font-size: 28px; cursor: pointer; color: #94A3B8; transition: color 0.2s; }
+        .close-modal { position: absolute; top: 15px; right: 20px; font-size: 28px; cursor: pointer; color: #94A3B8; transition: color 0.2s; z-index: 10;}
         .close-modal:hover { color: #0F172A; }
         .risk-row { background-color: #FEF2F2 !important; }
     </style>
@@ -74,18 +77,18 @@
     </div>
 
     <header class="bg-white border-b border-slate-200 sticky top-0 z-40 no-print opacity-0 transition-opacity duration-1000" id="mainHeader">
-        <div class="container mx-auto px-4 py-3 flex items-center justify-between">
+        <div class="container mx-auto px-4 py-3 flex flex-wrap sm:flex-nowrap items-center justify-between gap-y-3">
             <div class="flex items-center gap-2">
                 <div class="bg-primary/10 p-2 rounded-lg"><i class="fa-solid fa-layer-group text-primary text-xl"></i></div>
                 <div><h1 class="font-bold text-slate-800 text-lg leading-tight">Kare Lojistik</h1><p class="text-[10px] font-bold tracking-wide" id="modeText">MOD</p></div>
             </div>
-            <div class="flex items-center gap-2">
+            <div class="flex items-center gap-2 w-full sm:w-auto justify-end">
                 <button onclick="handleLogout()" class="bg-rose-50 text-rose-600 hover:bg-rose-100 px-3 py-1.5 rounded-lg text-xs font-bold flex items-center gap-1 transition-all"><i class="fa-solid fa-power-off"></i> Çıkış</button>
-                <div class="relative bg-slate-50 border border-slate-200 rounded-lg px-2 py-1.5 flex items-center gap-2 ml-2"><i class="fa-solid fa-circle-user text-slate-400"></i><select id="activeUser" onchange="changeUser()" class="bg-transparent text-sm font-semibold text-slate-700 outline-none cursor-pointer appearance-none pr-4"></select></div>
+                <div class="relative bg-slate-50 border border-slate-200 rounded-lg px-2 py-1.5 flex items-center gap-2 ml-2"><i class="fa-solid fa-circle-user text-slate-400"></i><select id="activeUser" onchange="changeUser()" class="bg-transparent text-sm font-semibold text-slate-700 outline-none cursor-pointer appearance-none pr-4 max-w-[100px] sm:max-w-none text-ellipsis"></select></div>
             </div>
         </div>
         
-        <div class="container mx-auto px-4 py-2 overflow-x-auto hide-scrollbar flex gap-2 border-t border-slate-100" id="mainTabs">
+        <div class="container mx-auto px-4 py-2 overflow-x-auto hide-scrollbar flex gap-2 border-t border-slate-100 whitespace-nowrap" id="mainTabs">
             <button onclick="switchTab('DRIVER')" id="tab-DRIVER" class="role-btn bg-slate-800 text-white px-4 py-2 rounded-xl text-sm font-semibold transition-all shadow-md flex"><i class="fa-solid fa-truck mr-1"></i> Şoför Paneli</button>
             <button onclick="switchTab('OPERATIONS')" id="tab-OPERATIONS" class="role-btn bg-transparent text-slate-500 px-4 py-2 rounded-xl text-sm font-semibold transition-all hidden"><i class="fa-solid fa-list-check mr-1"></i> Operasyon</button>
             <button onclick="switchTab('ACCOUNTING')" id="tab-ACCOUNTING" class="role-btn bg-transparent text-slate-500 px-4 py-2 rounded-xl text-sm font-semibold transition-all hidden"><i class="fa-solid fa-wallet mr-1"></i> Muhasebe & Cari</button>
@@ -101,7 +104,7 @@
         <!-- ==================== 0. PATRON PANELİ ==================== -->
         <div id="panel-PATRON" class="panel-section hidden-panel">
             <div class="mb-4 flex items-center justify-between"><div><h2 class="text-2xl font-bold text-slate-800"><i class="fa-solid fa-chart-line text-indigo-500 mr-2"></i>İş Zekası & Yönetim Ekranı</h2></div></div>
-            <div class="grid grid-cols-1 md:grid-cols-4 gap-4 mb-6">
+            <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-4 mb-6">
                 <div class="glass-card p-4 border-l-4 border-blue-500 bg-gradient-to-r from-blue-50 to-white"><div class="flex justify-between items-center mb-1"><p class="text-[11px] font-bold text-slate-500 uppercase tracking-wider">Personele Dağıtılan Kasa</p><i class="fa-solid fa-vault text-blue-300"></i></div><div class="space-y-1"><div class="flex justify-between text-sm"><span class="font-bold text-blue-800" id="patSafeEUR">0 €</span></div><div class="flex justify-between text-sm"><span class="font-bold text-emerald-700" id="patSafeUSD">0 $</span></div><div class="flex justify-between text-sm"><span class="font-bold text-indigo-700" id="patSafeTRY">0 ₺</span></div></div></div>
                 <div class="glass-card p-4 border-l-4 border-rose-500 bg-gradient-to-r from-rose-50 to-white"><div class="flex justify-between items-center mb-1"><p class="text-[11px] font-bold text-slate-500 uppercase tracking-wider">Bu Ayki Şirket Gideri</p><i class="fa-solid fa-money-bill-trend-up text-rose-300"></i></div><div class="space-y-1"><div class="flex justify-between text-sm"><span class="font-bold text-rose-800" id="patExpThisMonthEUR">0 €</span></div><div class="flex justify-between text-sm"><span class="font-bold text-rose-700" id="patExpThisMonthUSD">0 $</span></div><div class="flex justify-between text-sm"><span class="font-bold text-rose-600" id="patExpThisMonthTRY">0 ₺</span></div></div></div>
                 <div class="glass-card p-4 border-l-4 border-emerald-500 bg-gradient-to-r from-emerald-50 to-white"><div class="flex justify-between items-center mb-2"><p class="text-[11px] font-bold text-slate-500 uppercase tracking-wider">Operasyon Durumu</p><i class="fa-solid fa-truck-fast text-emerald-300"></i></div><h3 class="text-2xl font-black text-emerald-700" id="patActiveTripsCount">0</h3><p class="text-xs text-emerald-600 font-medium">Araç Şu An Yolda</p></div>
@@ -111,59 +114,59 @@
                 <div class="glass-card p-5 col-span-1 flex flex-col items-center justify-center"><h3 class="font-bold text-slate-800 text-sm w-full text-left mb-4">Gider Dağılımı (Kategori)</h3><div class="w-full max-w-[220px]"><canvas id="patronPieChart"></canvas></div></div>
                 <div class="glass-card p-5 col-span-1 md:col-span-2 flex flex-col"><h3 class="font-bold text-slate-800 text-sm mb-4">Son 6 Aylık Gider Trendi (EUR Bazında Gösterim)</h3><div class="flex-grow w-full h-48"><canvas id="patronTrendChart"></canvas></div></div>
             </div>
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                <div class="glass-card p-0 overflow-hidden flex flex-col"><div class="p-4 border-b border-slate-100 bg-slate-50 flex items-center gap-2"><i class="fa-solid fa-truck-moving text-indigo-500"></i><h3 class="font-bold text-slate-800">Araç Performans Karnesi</h3></div><div class="overflow-x-auto p-4"><table class="w-full text-left text-sm whitespace-nowrap"><thead class="text-xs text-slate-500 uppercase border-b border-slate-200"><tr><th class="pb-2">Plaka</th><th class="pb-2 text-right">Toplam KM</th><th class="pb-2 text-right">Masraf</th><th class="pb-2 text-right">Maliyet / KM</th></tr></thead><tbody id="patronVehicleList" class="divide-y divide-slate-100 text-slate-700"></tbody></table></div></div>
-                <div class="glass-card p-0 overflow-hidden flex flex-col"><div class="p-4 border-b border-slate-100 bg-slate-50 flex items-center gap-2"><i class="fa-solid fa-user-shield text-amber-500"></i><h3 class="font-bold text-slate-800">Şoför Kasa Durumları & Risk Listesi</h3></div><div class="overflow-x-auto p-4"><table class="w-full text-left text-sm whitespace-nowrap"><thead class="text-xs text-slate-500 uppercase border-b border-slate-200"><tr><th class="pb-2">Personel</th><th class="pb-2 text-right">Elindeki Bakiye (Net Kasa)</th><th class="pb-2 text-center">Durum</th></tr></thead><tbody id="patronDriverRiskList" class="divide-y divide-slate-100 text-slate-700"></tbody></table></div></div>
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                <div class="glass-card p-0 overflow-hidden flex flex-col"><div class="p-4 border-b border-slate-100 bg-slate-50 flex items-center gap-2"><i class="fa-solid fa-truck-moving text-indigo-500"></i><h3 class="font-bold text-slate-800">Araç Performans Karnesi</h3></div><div class="overflow-x-auto p-4"><table class="w-full text-left text-sm whitespace-nowrap min-w-[400px]"><thead class="text-xs text-slate-500 uppercase border-b border-slate-200"><tr><th class="pb-2">Plaka</th><th class="pb-2 text-right">Toplam KM</th><th class="pb-2 text-right">Masraf</th><th class="pb-2 text-right">Maliyet / KM</th></tr></thead><tbody id="patronVehicleList" class="divide-y divide-slate-100 text-slate-700"></tbody></table></div></div>
+                <div class="glass-card p-0 overflow-hidden flex flex-col"><div class="p-4 border-b border-slate-100 bg-slate-50 flex items-center gap-2"><i class="fa-solid fa-user-shield text-amber-500"></i><h3 class="font-bold text-slate-800">Şoför Kasa Durumları & Risk Listesi</h3></div><div class="overflow-x-auto p-4"><table class="w-full text-left text-sm whitespace-nowrap min-w-[400px]"><thead class="text-xs text-slate-500 uppercase border-b border-slate-200"><tr><th class="pb-2">Personel</th><th class="pb-2 text-right">Elindeki Bakiye (Net Kasa)</th><th class="pb-2 text-center">Durum</th></tr></thead><tbody id="patronDriverRiskList" class="divide-y divide-slate-100 text-slate-700"></tbody></table></div></div>
             </div>
         </div>
 
         <!-- ==================== 1. ŞOFÖR PANELİ ==================== -->
         <div id="panel-DRIVER" class="panel-section hidden-panel">
-            <div class="glass-card p-4 mb-6 border-l-4 border-emerald-500 flex justify-between items-center bg-emerald-50" id="tripStartBox">
+            <div class="glass-card p-4 mb-6 border-l-4 border-emerald-500 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3 bg-emerald-50" id="tripStartBox">
                 <div><h3 class="font-bold text-emerald-800 text-sm"><i class="fa-solid fa-route mr-1"></i> Yeni Sefere Çık</h3><p class="text-[10px] text-emerald-600 mt-1">Araç plakaları personel kaydından otomatik getirilir.</p></div>
-                <button onclick="openTripModal()" class="bg-emerald-600 hover:bg-emerald-700 text-white px-4 py-2 rounded-xl text-sm font-bold shadow-sm transition-all whitespace-nowrap hide-from-patron">Sefere Başla</button>
+                <button onclick="openTripModal()" class="bg-emerald-600 hover:bg-emerald-700 text-white px-4 py-2 rounded-xl text-sm font-bold shadow-sm transition-all whitespace-nowrap w-full sm:w-auto">Sefere Başla</button>
             </div>
             
-            <div class="glass-card p-4 mb-6 border-l-4 border-rose-500 flex justify-between items-center bg-rose-50 hidden" id="tripActiveBox">
+            <div class="glass-card p-4 mb-6 border-l-4 border-rose-500 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3 bg-rose-50 hidden" id="tripActiveBox">
                 <div>
-                    <h3 class="font-bold text-rose-800 text-sm flex items-center gap-2">
+                    <h3 class="font-bold text-rose-800 text-sm flex flex-wrap items-center gap-2">
                         <i class="fa-solid fa-truck-fast mr-1 animate-pulse"></i> Aktif Sefer: <span id="activeTripNoDisplay" class="text-rose-600 font-extrabold"></span>
-                        <button onclick="openEditActiveTripModal()" class="bg-rose-100 text-rose-700 hover:bg-rose-200 px-2 py-1 rounded text-[10px] ml-2 font-bold hide-from-patron shadow-sm" title="Plaka veya Başlangıç KM Düzelt"><i class="fa-solid fa-pen mr-1"></i>Düzelt</button>
+                        <button onclick="openEditActiveTripModal()" class="bg-rose-100 text-rose-700 hover:bg-rose-200 px-2 py-1 rounded text-[10px] sm:ml-2 font-bold shadow-sm" title="Plaka veya Başlangıç KM Düzelt"><i class="fa-solid fa-pen mr-1"></i>Düzelt</button>
                     </h3>
                     <p class="text-[11px] text-rose-600 mt-1 font-medium"><span id="activeTripRoute"></span> | Çekici: <span id="activeTripPlate" class="font-bold uppercase"></span> | Dorse: <span id="activeTripTrailer" class="font-bold uppercase"></span></p>
                     <p class="text-[10px] text-rose-500">Başlangıç: <span id="activeTripStartKm" class="font-bold"></span> KM</p>
                 </div>
-                <button onclick="openEndTripModal()" class="bg-rose-600 hover:bg-rose-700 text-white px-4 py-2 rounded-xl text-sm font-bold shadow-sm transition-all whitespace-nowrap hide-from-patron">Seferi Bitir</button>
+                <button onclick="openEndTripModal()" class="bg-rose-600 hover:bg-rose-700 text-white px-4 py-2 rounded-xl text-sm font-bold shadow-sm transition-all whitespace-nowrap w-full sm:w-auto">Seferi Bitir</button>
             </div>
 
             <div class="wallet-card mb-6 relative overflow-hidden">
                 <div class="absolute -right-10 -top-10 opacity-10"><i class="fa-brands fa-nfc-symbol text-9xl"></i></div>
                 <div class="flex justify-between items-start mb-4 relative z-10">
                     <div><p class="text-indigo-200 text-xs font-medium tracking-wider uppercase mb-1">DİJİTAL KASA (Avans Bakiyesi)</p><h2 class="text-xl font-bold text-white"><span id="driverNameTitle">Ahmet Yılmaz</span></h2></div>
-                    <button onclick="openDriverStatementModal()" class="bg-white/20 hover:bg-white/30 text-white px-3 py-1.5 rounded-lg text-xs font-bold transition flex items-center gap-1.5 backdrop-blur-sm border border-white/10 shadow-sm"><i class="fa-solid fa-list-check"></i> Cari Döküm</button>
+                    <button onclick="openDriverStatementModal()" class="bg-white/20 hover:bg-white/30 text-white px-3 py-1.5 rounded-lg text-xs font-bold transition flex items-center gap-1.5 backdrop-blur-sm border border-white/10 shadow-sm whitespace-nowrap"><i class="fa-solid fa-list-check"></i> Cari Döküm</button>
                 </div>
-                <div class="grid grid-cols-3 gap-4 border-t border-indigo-400/30 pt-4 relative z-10">
-                    <div><p class="text-indigo-200 text-[10px]">EUR Bakiye</p><p id="mySafeEUR" class="text-lg font-bold">0 €</p></div>
-                    <div><p class="text-indigo-200 text-[10px]">USD Bakiye</p><p id="mySafeUSD" class="text-lg font-bold">0 $</p></div>
-                    <div><p class="text-indigo-200 text-[10px]">TRY Bakiye</p><p id="mySafeTRY" class="text-lg font-bold">0 ₺</p></div>
+                <div class="grid grid-cols-3 gap-2 sm:gap-4 border-t border-indigo-400/30 pt-4 relative z-10">
+                    <div><p class="text-indigo-200 text-[10px]">EUR Bakiye</p><p id="mySafeEUR" class="text-base sm:text-lg font-bold">0 €</p></div>
+                    <div><p class="text-indigo-200 text-[10px]">USD Bakiye</p><p id="mySafeUSD" class="text-base sm:text-lg font-bold">0 $</p></div>
+                    <div><p class="text-indigo-200 text-[10px]">TRY Bakiye</p><p id="mySafeTRY" class="text-base sm:text-lg font-bold">0 ₺</p></div>
                 </div>
             </div>
 
             <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
-                <div class="glass-card p-5 h-fit lg:col-span-1 hide-from-patron">
+                <div class="glass-card p-5 h-fit lg:col-span-1">
                     <h3 class="font-bold text-slate-800 text-lg mb-4 flex items-center gap-2"><i class="fa-solid fa-receipt text-primary"></i> Yeni Masraf Ekle</h3>
                     <form id="expenseForm" onsubmit="submitExpense(event); return false;" class="space-y-4">
                         <select id="category" onchange="toggleVehicleFields()" required class="input-style font-medium text-slate-700">
                             <option value="">Kategori Seçiniz</option><option value="HARCIRAH">💵 Harcırah (Günlük)</option><option value="MAZOT">⛽ Yakıt / Mazot</option><option value="OTOYOL">🛣️ Otoyol / Köprü</option><option value="GUMRUK">🛂 Gümrük / Kantar</option><option value="YEMEK">🍔 Yemek / Konaklama</option><option value="BAKIM">🔧 Tamir / Bakım</option><option value="TELEFON">📱 Telefon / İletişim</option><option value="DIGER">📝 Diğer</option>
                         </select>
-                        <div id="vehicleFields" class="hidden flex flex-col gap-2 bg-slate-50 p-3 rounded-xl border border-slate-200"><label class="text-[10px] font-bold text-slate-500 uppercase">Araç Bilgileri</label><div class="flex gap-2"><input type="text" id="plaka" placeholder="Plaka (Zorunlu Değil)" class="w-1/2 input-style uppercase bg-white border border-slate-200"><input type="number" id="km" placeholder="Güncel KM" class="w-1/2 input-style bg-white border border-slate-200"></div></div>
+                        <div id="vehicleFields" class="hidden flex flex-col gap-2 bg-slate-50 p-3 rounded-xl border border-slate-200"><label class="text-[10px] font-bold text-slate-500 uppercase">Araç Bilgileri</label><div class="flex flex-col sm:flex-row gap-2"><input type="text" id="plaka" placeholder="Plaka (Zorunlu Değil)" class="w-full sm:w-1/2 input-style uppercase bg-white border border-slate-200"><input type="number" id="km" placeholder="Güncel KM" class="w-full sm:w-1/2 input-style bg-white border border-slate-200"></div></div>
                         <input type="text" id="tripName" required placeholder="Açıklama (Örn: Kapıkule Geçiş)" class="input-style">
                         <div class="flex gap-2"><input type="number" step="0.01" id="amount" required placeholder="Tutar" class="w-2/3 input-style text-lg font-bold text-primary"><select id="currency" class="w-1/3 input-style font-bold bg-slate-100"><option value="TRY">TRY ₺</option><option value="EUR">EUR €</option><option value="USD">USD $</option></select></div>
                         <button type="submit" class="w-full bg-primary hover:bg-indigo-700 text-white py-3.5 rounded-xl font-bold shadow-md transition-all mt-4"><i class="fa-regular fa-paper-plane mr-1"></i> Onaya Gönder</button>
                     </form>
                 </div>
                 
-                <div class="glass-card p-5 lg:col-span-2 col-expand-patron">
+                <div class="glass-card p-5 lg:col-span-2">
                     <h3 class="font-bold text-slate-800 text-lg mb-4">Son Eklenen Masraflar</h3>
                     <div id="driverList" class="space-y-3 max-h-[500px] overflow-y-auto pr-2"></div>
                 </div>
@@ -186,7 +189,7 @@
             </div>
 
             <!-- SON ONAYLANANLAR (DÜZELTME/SİLME İÇİN) -->
-            <div class="glass-card p-5 mt-6 hide-from-patron border-l-4 border-indigo-500">
+            <div class="glass-card p-5 mt-6 border-l-4 border-indigo-500">
                 <h3 class="font-bold text-slate-800 text-lg mb-4">Son Onaylanan Masraflar (Düzelt / Sil)</h3>
                 <p class="text-xs text-slate-500 mb-4">Yanlışlıkla onaylanan masrafların tutarını düzeltebilir veya silebilirsiniz. Bakiye otomatik güncellenir.</p>
                 <div class="overflow-x-auto border border-slate-200 rounded-xl max-h-[300px] overflow-y-auto">
@@ -203,67 +206,73 @@
         <!-- ==================== 3. MUHASEBE / CARİ BÖLÜMÜ ==================== -->
         <div id="panel-ACCOUNTING" class="panel-section hidden-panel">
             
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6 no-print hide-from-patron">
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-4 mb-6 no-print">
                 <!-- AVANS VERME FORMU -->
                 <div class="glass-card p-5 bg-gradient-to-br from-white to-blue-50 border-blue-100">
                     <h3 class="font-bold text-blue-800 text-sm mb-3 flex items-center gap-2"><i class="fa-solid fa-money-bill-transfer"></i> Personele Avans Çıkışı Yap</h3>
-                    <form id="advanceForm" onsubmit="giveAdvance(event); return false;" class="flex gap-2 mt-4">
-                        <select id="advDriver" class="input-style bg-white w-2/5 p-2 text-sm"></select>
-                        <input type="number" id="advAmount" required placeholder="Tutar" class="input-style bg-white w-1/4 p-2 text-sm font-bold">
-                        <select id="advCur" class="input-style bg-white w-1/5 p-2 text-sm font-bold"><option value="TRY">TRY</option><option value="EUR">EUR</option><option value="USD">USD</option></select>
-                        <button type="submit" class="w-auto bg-blue-600 hover:bg-blue-700 text-white px-4 rounded-xl font-bold shadow-sm transition">Ver</button>
+                    <form id="advanceForm" onsubmit="giveAdvance(event); return false;" class="flex flex-col sm:flex-row gap-2 mt-4">
+                        <select id="advDriver" class="input-style bg-white w-full sm:flex-1 p-2 text-sm"></select>
+                        <input type="number" id="advAmount" required placeholder="Tutar" class="input-style bg-white w-full sm:w-24 p-2 text-sm font-bold">
+                        <select id="advCur" class="input-style bg-white w-full sm:w-24 p-2 text-sm font-bold"><option value="TRY">TRY</option><option value="EUR">EUR</option><option value="USD">USD</option></select>
+                        <button type="submit" class="w-full sm:w-auto bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 sm:py-0 rounded-xl font-bold shadow-sm transition">Ver</button>
                     </form>
                 </div>
                 
                 <!-- SON AVANSLAR LİSTESİ (DÜZELTME İÇİN) -->
-                <div class="glass-card p-4 overflow-y-auto max-h-[160px] border-l-4 border-indigo-500">
+                <div class="glass-card p-4 overflow-y-auto max-h-[220px] border-l-4 border-indigo-500">
                     <h3 class="font-bold text-slate-800 text-sm mb-2"><i class="fa-solid fa-clock-rotate-left text-indigo-400 mr-1"></i> Son Avans Kayıtları (Düzelt / Sil)</h3>
-                    <table class="w-full text-left text-xs whitespace-nowrap">
-                        <tbody id="recentAdvancesList" class="divide-y divide-slate-100 text-slate-600"></tbody>
-                    </table>
+                    <div class="overflow-x-auto">
+                        <table class="w-full text-left text-xs whitespace-nowrap min-w-[300px]">
+                            <tbody id="recentAdvancesList" class="divide-y divide-slate-100 text-slate-600"></tbody>
+                        </table>
+                    </div>
                 </div>
             </div>
 
             <!-- DETAYLI ESKİ CARİ TABLO -->
-            <div class="glass-card p-5 overflow-x-auto">
+            <div class="glass-card p-5">
                 <div class="flex flex-col md:flex-row justify-between items-start md:items-center mb-4 gap-4 no-print">
-                    <div class="flex items-center gap-3">
+                    <div class="flex flex-col sm:flex-row items-start sm:items-center gap-3">
                         <h3 class="font-bold text-slate-800 text-lg">Personel Cari Ekstresi</h3>
-                        <button onclick="exportAccountingCSV()" class="bg-emerald-600 hover:bg-emerald-700 text-white px-3 py-1.5 rounded-lg text-xs font-bold shadow-sm transition flex items-center gap-1.5 hide-from-patron" title="Logo/Mikro/Zirve için uygun format"><i class="fa-solid fa-file-csv"></i> Muhasebe Excel (CSV)</button>
+                        <button onclick="exportAccountingCSV()" class="bg-emerald-600 hover:bg-emerald-700 text-white px-3 py-1.5 rounded-lg text-xs font-bold shadow-sm transition flex items-center gap-1.5" title="Logo/Mikro/Zirve için uygun format"><i class="fa-solid fa-file-csv"></i> Muhasebe Excel (CSV)</button>
                     </div>
                     <div class="relative w-full md:w-72"><i class="fa-solid fa-magnifying-glass absolute left-3 top-2.5 text-indigo-400"></i><input type="text" id="searchCariInput" onkeyup="filterCari()" placeholder="Şoför adı ile filtrele..." class="w-full bg-slate-50 border border-indigo-200 text-sm rounded-xl pl-9 pr-3 py-2 font-medium outline-none"></div>
                 </div>
-                <table class="w-full text-left text-sm whitespace-nowrap min-w-[900px] border border-slate-200 rounded-xl overflow-hidden">
-                    <thead class="bg-slate-800 text-white text-xs uppercase font-semibold">
-                        <tr><th class="p-3">Personel</th><th class="p-3 text-right">Verilen Toplam Avans</th><th class="p-3 text-right">Onaylı Toplam Masraf</th><th class="p-3 text-right">Net Bakiye (Kasa)</th><th class="p-3 text-center no-print">PDF Ekstre</th></tr>
-                    </thead>
-                    <tbody id="accountingCariList" class="divide-y divide-slate-200 text-slate-700 bg-white"></tbody>
-                </table>
+                <div class="overflow-x-auto border border-slate-200 rounded-xl">
+                    <table class="w-full text-left text-sm whitespace-nowrap min-w-[900px] overflow-hidden">
+                        <thead class="bg-slate-800 text-white text-xs uppercase font-semibold">
+                            <tr><th class="p-3">Personel</th><th class="p-3 text-right">Verilen Toplam Avans</th><th class="p-3 text-right">Onaylı Toplam Masraf</th><th class="p-3 text-right">Net Bakiye (Kasa)</th><th class="p-3 text-center no-print">PDF Ekstre</th></tr>
+                        </thead>
+                        <tbody id="accountingCariList" class="divide-y divide-slate-200 text-slate-700 bg-white"></tbody>
+                    </table>
+                </div>
             </div>
         </div>
 
         <!-- ==================== 4. SEFER RAPORLARI ==================== -->
         <div id="panel-DASHBOARD" class="panel-section hidden-panel">
-            <div class="glass-card p-6 overflow-x-auto">
+            <div class="glass-card p-6">
                 <div class="flex flex-col md:flex-row justify-between items-start md:items-center mb-4 border-b border-slate-100 pb-4 gap-3">
                     <h3 class="font-bold text-slate-800 text-lg"><i class="fa-solid fa-truck-fast text-emerald-500 mr-2"></i>Tamamlanan Sefer (KM) Raporu</h3>
-                    <div class="relative w-full md:w-64 hide-from-patron"><i class="fa-solid fa-magnifying-glass absolute left-3 top-2.5 text-emerald-400"></i><input type="text" id="searchTripInput" onkeyup="filterTrips()" placeholder="Sefer no, şoför, güzergah..." class="w-full bg-slate-50 border border-emerald-200 text-sm rounded-xl pl-9 pr-3 py-2 font-medium outline-none"></div>
+                    <div class="relative w-full md:w-64"><i class="fa-solid fa-magnifying-glass absolute left-3 top-2.5 text-emerald-400"></i><input type="text" id="searchTripInput" onkeyup="filterTrips()" placeholder="Sefer no, şoför, güzergah..." class="w-full bg-slate-50 border border-emerald-200 text-sm rounded-xl pl-9 pr-3 py-2 font-medium outline-none"></div>
                 </div>
-                <p class="text-xs text-slate-500 mb-4 hide-from-patron">Biten seferler listelenir. <b>Kalem</b> ile tüm bilgileri düzeltebilir, <b>çöp kutusu</b> ile silebilirsiniz.</p>
-                <table class="w-full text-left text-sm whitespace-nowrap border border-slate-200 rounded-xl overflow-hidden min-w-[900px]">
-                    <thead class="bg-slate-50 text-slate-600 text-xs uppercase font-semibold border-b border-slate-200">
-                        <tr><th class="p-4">Tarih</th><th class="p-4">Sefer/Dosya No</th><th class="p-4">Personel</th><th class="p-4">Güzergah</th><th class="p-4">Çekici & Dorse</th><th class="p-4 text-right">Toplam KM</th><th class="p-4 text-center hide-from-patron">İşlem</th></tr>
-                    </thead>
-                    <tbody id="tripReportList" class="divide-y divide-slate-100 text-slate-700"></tbody>
-                </table>
+                <p class="text-xs text-slate-500 mb-4">Biten seferler listelenir. <b>Kalem</b> ile tüm bilgileri düzeltebilir, <b>çöp kutusu</b> ile silebilirsiniz.</p>
+                <div class="overflow-x-auto border border-slate-200 rounded-xl">
+                    <table class="w-full text-left text-sm whitespace-nowrap min-w-[900px] overflow-hidden">
+                        <thead class="bg-slate-50 text-slate-600 text-xs uppercase font-semibold border-b border-slate-200">
+                            <tr><th class="p-4">Tarih</th><th class="p-4">Sefer/Dosya No</th><th class="p-4">Personel</th><th class="p-4">Güzergah</th><th class="p-4">Çekici & Dorse</th><th class="p-4 text-right">Toplam KM</th><th class="p-4 text-center">İşlem</th></tr>
+                        </thead>
+                        <tbody id="tripReportList" class="divide-y divide-slate-100 text-slate-700"></tbody>
+                    </table>
+                </div>
             </div>
         </div>
 
         <!-- ==================== 5. KULLANICI YÖNETİMİ & AYARLAR ==================== -->
         <div id="panel-USERS" class="panel-section hidden-panel">
-            <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+            <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
                 <!-- Kullanıcı Ekleme Formu -->
-                <div class="glass-card p-5 h-fit hide-from-patron">
+                <div class="glass-card p-5 h-fit">
                     <h3 class="font-bold text-slate-800 text-lg mb-4"><i class="fa-solid fa-user-plus text-primary mr-2"></i>Yeni Kullanıcı</h3>
                     <form id="addUserForm" onsubmit="handleAddUser(event); return false;" class="space-y-4">
                         <input type="text" id="newUserName" required placeholder="Ad Soyad" class="input-style border border-slate-200">
@@ -281,20 +290,22 @@
                 </div>
 
                 <!-- Kullanıcılar Listesi -->
-                <div class="glass-card p-5 md:col-span-2 col-expand-patron overflow-x-auto">
+                <div class="glass-card p-5 lg:col-span-2">
                     <h3 class="font-bold text-slate-800 text-lg mb-4 border-b border-slate-100 pb-2">Sistem Kullanıcıları</h3>
-                    <table class="w-full text-left text-sm whitespace-nowrap border border-slate-200 rounded-xl overflow-hidden">
-                        <thead class="bg-slate-50 text-slate-600 text-xs uppercase border-b border-slate-200">
-                            <tr><th class="p-3">Kullanıcı Adı</th><th class="p-3">Sabit Plaka / Dorse</th><th class="p-3">Yetki / Rol</th><th class="p-3 text-center">Durum</th><th class="p-3 text-right">İşlem</th></tr>
-                        </thead>
-                        <tbody id="userListTable" class="divide-y divide-slate-100"></tbody>
-                    </table>
+                    <div class="overflow-x-auto border border-slate-200 rounded-xl">
+                        <table class="w-full text-left text-sm whitespace-nowrap min-w-[600px] overflow-hidden">
+                            <thead class="bg-slate-50 text-slate-600 text-xs uppercase border-b border-slate-200">
+                                <tr><th class="p-3">Kullanıcı Adı</th><th class="p-3">Sabit Plaka / Dorse</th><th class="p-3">Yetki / Rol</th><th class="p-3 text-center">Durum</th><th class="p-3 text-right">İşlem</th></tr>
+                            </thead>
+                            <tbody id="userListTable" class="divide-y divide-slate-100"></tbody>
+                        </table>
+                    </div>
                 </div>
             </div>
 
-            <!-- Sistem Yedekleme (Patrondan Gizli) -->
-            <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mt-6 hide-from-patron">
-                <div class="glass-card p-5 md:col-span-2 bg-gradient-to-br from-white to-indigo-50 border-indigo-100 relative">
+            <!-- Sistem Yedekleme -->
+            <div class="grid grid-cols-1 lg:grid-cols-3 gap-6 mt-6">
+                <div class="glass-card p-5 lg:col-span-2 bg-gradient-to-br from-white to-indigo-50 border-indigo-100 relative">
                     <h3 class="font-bold text-indigo-800 text-lg mb-2"><i class="fa-solid fa-server mr-2"></i>Sistem Yedekleme & Geri Yükleme</h3>
                     <p class="text-xs text-slate-500 mb-4">Verileriniz Google Firebase'de güvendedir. Yinede bilgisayarınıza manuel yedek alabilirsiniz.</p>
                     <div class="flex flex-col sm:flex-row gap-3">
@@ -318,12 +329,12 @@
 
             <!-- BORÇ/ALACAK EKSTRESİ -->
             <div class="glass-card p-5 mb-6">
-                <div class="flex items-center justify-between mb-4 border-b border-slate-100 pb-3">
+                <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between mb-4 border-b border-slate-100 pb-3 gap-2">
                     <h3 class="font-bold text-slate-800 text-lg"><i class="fa-solid fa-scale-balanced text-rose-500 mr-2"></i>Borç / Alacak Ekstresi</h3>
-                    <span class="text-xs text-slate-500 bg-slate-100 px-3 py-1 rounded-full">Tüm şoförler anlık durum</span>
+                    <span class="text-xs text-slate-500 bg-slate-100 px-3 py-1 rounded-full whitespace-nowrap">Tüm şoförler anlık durum</span>
                 </div>
-                <div class="overflow-x-auto">
-                    <table class="w-full text-left text-sm whitespace-nowrap border border-slate-200 rounded-xl overflow-hidden min-w-[800px]">
+                <div class="overflow-x-auto border border-slate-200 rounded-xl">
+                    <table class="w-full text-left text-sm whitespace-nowrap min-w-[800px] overflow-hidden">
                         <thead class="bg-slate-800 text-white text-xs uppercase font-semibold">
                             <tr>
                                 <th class="p-3">Personel</th>
@@ -344,9 +355,9 @@
 
                 <!-- ŞOFÖR PERFORMANS KARTI -->
                 <div class="glass-card p-5">
-                    <div class="flex items-center justify-between mb-4 border-b border-slate-100 pb-3">
+                    <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between mb-4 border-b border-slate-100 pb-3 gap-2">
                         <h3 class="font-bold text-slate-800 text-lg"><i class="fa-solid fa-trophy text-amber-500 mr-2"></i>Şoför Performans Kartı</h3>
-                        <select id="perfDriverSelect" onchange="renderPerformanceCard()" class="input-style text-xs py-1 px-2 w-44"></select>
+                        <select id="perfDriverSelect" onchange="renderPerformanceCard()" class="input-style text-xs py-1 px-2 w-full sm:w-44"></select>
                     </div>
                     <div id="performanceCardBody">
                         <div class="text-center text-slate-400 py-6 text-sm">Şoför seçiniz...</div>
@@ -355,10 +366,10 @@
 
                 <!-- AYLIK ÖZET RAPORU -->
                 <div class="glass-card p-5">
-                    <div class="flex items-center justify-between mb-4 border-b border-slate-100 pb-3">
+                    <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between mb-4 border-b border-slate-100 pb-3 gap-2">
                         <h3 class="font-bold text-slate-800 text-lg"><i class="fa-solid fa-calendar-check text-indigo-500 mr-2"></i>Aylık Özet Raporu</h3>
-                        <div class="flex gap-2 items-center">
-                            <input type="month" id="monthlyReportMonth" class="input-style text-xs py-1 px-2 w-36">
+                        <div class="flex gap-2 items-center w-full sm:w-auto">
+                            <input type="month" id="monthlyReportMonth" class="input-style text-xs py-1 px-2 w-full sm:w-36">
                             <button onclick="renderMonthlyReport()" class="bg-indigo-600 hover:bg-indigo-700 text-white px-3 py-1.5 rounded-lg text-xs font-bold transition">Getir</button>
                         </div>
                     </div>
@@ -370,12 +381,12 @@
 
             <!-- SİSTEM LOG GEÇMİŞİ -->
             <div class="glass-card p-5 mb-6">
-                <div class="flex items-center justify-between mb-4 border-b border-slate-100 pb-3">
+                <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between mb-4 border-b border-slate-100 pb-3 gap-2">
                     <h3 class="font-bold text-slate-800 text-lg"><i class="fa-solid fa-clock-rotate-left text-blue-500 mr-2"></i>Sistem Log Geçmişi</h3>
-                    <span class="text-xs text-slate-500 bg-slate-100 px-3 py-1 rounded-full">Onay / Red / Silme kayıtları</span>
+                    <span class="text-xs text-slate-500 bg-slate-100 px-3 py-1 rounded-full whitespace-nowrap">Onay / Red / Silme kayıtları</span>
                 </div>
-                <div class="overflow-x-auto max-h-72 overflow-y-auto">
-                    <table class="w-full text-left text-sm whitespace-nowrap">
+                <div class="overflow-x-auto max-h-72 border border-slate-200 rounded-xl">
+                    <table class="w-full text-left text-sm whitespace-nowrap min-w-[600px]">
                         <thead class="bg-slate-50 text-slate-500 text-xs uppercase border-b border-slate-200 sticky top-0">
                             <tr><th class="p-3">Tarih</th><th class="p-3">İşlem</th><th class="p-3">Personel</th><th class="p-3 text-right">Tutar</th><th class="p-3 text-center">Durum</th></tr>
                         </thead>
@@ -402,30 +413,30 @@
 
     <!-- CARİ DÖKÜM MODALI -->
     <div id="driverStatementModal" class="modal flex" style="display: none;">
-        <div class="modal-content modal-content-wide border-t-4 border-indigo-500">
+        <div class="modal-content modal-content-wide border-t-4 border-indigo-500 w-11/12 max-h-[90vh]">
             <span class="close-modal" onclick="closeDriverStatementModal()">&times;</span>
-            <h3 class="text-xl font-bold text-slate-800 mb-2"><i class="fa-solid fa-list-check text-indigo-500 mr-2"></i>Kasa Hesap Dökümüm</h3>
-            <p class="text-xs text-slate-500 mb-4 border-b pb-4">Tüm avans girişleriniz ve onaylanmış masraflarınız (Para çıkışları).</p>
+            <h3 class="text-xl font-bold text-slate-800 mb-2 mt-2"><i class="fa-solid fa-list-check text-indigo-500 mr-2"></i>Kasa Hesap Dökümüm</h3>
+            <p class="text-xs text-slate-500 mb-4 border-b pb-4 pr-6">Tüm avans girişleriniz ve onaylanmış masraflarınız (Para çıkışları).</p>
             <div class="overflow-x-auto max-h-[60vh]">
-                <table class="w-full text-left text-sm whitespace-nowrap"><tbody id="driverStatementList" class="divide-y divide-slate-100"></tbody></table>
+                <table class="w-full text-left text-sm whitespace-nowrap min-w-[350px]"><tbody id="driverStatementList" class="divide-y divide-slate-100"></tbody></table>
             </div>
         </div>
     </div>
 
     <!-- SEFER BAŞLAMA MODALI -->
     <div id="tripModal" class="modal flex" style="display: none;">
-        <div class="modal-content border border-slate-200">
+        <div class="modal-content border border-slate-200 w-11/12">
             <span class="close-modal" onclick="closeTripModal()">&times;</span>
-            <h3 class="text-xl font-bold text-slate-800 mb-4 border-b pb-2"><i class="fa-solid fa-play text-emerald-500 mr-2"></i>Sefere Başla</h3>
+            <h3 class="text-xl font-bold text-slate-800 mb-4 border-b pb-2 mt-2"><i class="fa-solid fa-play text-emerald-500 mr-2"></i>Sefere Başla</h3>
             <form id="tripForm" onsubmit="startTrip(event); return false;" class="space-y-4">
                 <div><label class="text-xs font-bold text-slate-500 ml-1">Sefer / Dosya Numarası</label><input type="text" id="newTripNo" required placeholder="Örn: 101 veya TR-ALM" class="input-style border border-slate-200 mt-1 font-bold text-indigo-600"></div>
                 <div><label class="text-xs font-bold text-slate-500 ml-1">Güzergah (Nereye?)</label><input type="text" id="newTripRoute" required placeholder="Örn: İstanbul - Berlin" class="input-style border border-slate-200 mt-1"></div>
-                <div class="flex gap-2">
-                    <div class="w-1/2">
+                <div class="flex flex-col sm:flex-row gap-2">
+                    <div class="w-full sm:w-1/2">
                         <label class="text-[10px] font-bold text-slate-500 ml-1">Çekici Plakası (Kamyon)</label>
                         <input type="text" id="newTripPlate" required placeholder="Örn: 34ABC12" class="input-style border border-slate-200 mt-1 uppercase">
                     </div>
-                    <div class="w-1/2">
+                    <div class="w-full sm:w-1/2">
                         <label class="text-[10px] font-bold text-slate-500 ml-1">Dorse Plakası</label>
                         <input type="text" id="newTripTrailer" placeholder="Örn: 34XYZ99" class="input-style border border-slate-200 mt-1 uppercase">
                     </div>
@@ -438,10 +449,10 @@
 
     <!-- SEFER BİTİRME MODALI -->
     <div id="endTripModal" class="modal flex" style="display: none;">
-        <div class="modal-content border-t-4 border-rose-500">
+        <div class="modal-content border-t-4 border-rose-500 w-11/12">
             <span class="close-modal" onclick="closeEndTripModal()">&times;</span>
-            <h3 class="text-xl font-bold text-slate-800 mb-2"><i class="fa-solid fa-stop text-rose-500 mr-2"></i>Seferi Bitir</h3>
-            <p class="text-xs text-slate-500 mb-4 border-b pb-4">Aracın sefer sonundaki güncel (Bitiş) KM'sini giriniz.</p>
+            <h3 class="text-xl font-bold text-slate-800 mb-2 mt-2"><i class="fa-solid fa-stop text-rose-500 mr-2"></i>Seferi Bitir</h3>
+            <p class="text-xs text-slate-500 mb-4 border-b pb-4 pr-6">Aracın sefer sonundaki güncel (Bitiş) KM'sini giriniz.</p>
             <form id="endTripForm" onsubmit="processEndTrip(event); return false;" class="space-y-4">
                 <div><label class="text-xs font-bold text-slate-500 ml-1">Bitiş KM'si</label><input type="number" id="endTripKmInput" required placeholder="Aracın şu anki KM'si" class="input-style border border-slate-200 mt-1 font-bold text-rose-600 text-lg"></div>
                 <button type="submit" class="w-full bg-rose-600 hover:bg-rose-500 text-white py-3.5 rounded-xl font-bold shadow-md transition-all mt-4 text-lg">Seferi Sonlandır</button>
@@ -451,17 +462,17 @@
 
     <!-- AKTİF SEFER DÜZENLEME MODALI -->
     <div id="editActiveTripModal" class="modal flex" style="display: none;">
-        <div class="modal-content border-t-4 border-blue-500">
+        <div class="modal-content border-t-4 border-blue-500 w-11/12">
             <span class="close-modal" onclick="closeEditActiveTripModal()">&times;</span>
-            <h3 class="text-xl font-bold text-slate-800 mb-2"><i class="fa-solid fa-pen text-blue-500 mr-2"></i>Aktif Seferi Düzelt</h3>
-            <p class="text-xs text-slate-500 mb-4 border-b pb-4">Yanlış girilen bilgileri güncelleyebilirsiniz.</p>
+            <h3 class="text-xl font-bold text-slate-800 mb-2 mt-2"><i class="fa-solid fa-pen text-blue-500 mr-2"></i>Aktif Seferi Düzelt</h3>
+            <p class="text-xs text-slate-500 mb-4 border-b pb-4 pr-6">Yanlış girilen bilgileri güncelleyebilirsiniz.</p>
             <form id="editActiveTripForm" onsubmit="saveActiveTripEdit(event); return false;" class="space-y-4">
-                <div class="flex gap-2">
-                    <div class="w-1/2">
+                <div class="flex flex-col sm:flex-row gap-2">
+                    <div class="w-full sm:w-1/2">
                         <label class="text-[10px] font-bold text-slate-500 ml-1">Çekici Plaka</label>
                         <input type="text" id="editActivePlate" required class="input-style border border-slate-200 mt-1 uppercase">
                     </div>
-                    <div class="w-1/2">
+                    <div class="w-full sm:w-1/2">
                         <label class="text-[10px] font-bold text-slate-500 ml-1">Dorse Plaka</label>
                         <input type="text" id="editActiveTrailer" class="input-style border border-slate-200 mt-1 uppercase">
                     </div>
@@ -475,40 +486,40 @@
         </div>
     </div>
 
-    <!-- BİTMİŞ SEFER DÜZENLEME MODALI (Sadece Admin/Ops) — TAM DÜZENLEME -->
+    <!-- BİTMİŞ SEFER DÜZENLEME MODALI -->
     <div id="editPastTripModal" class="modal flex" style="display: none;">
-        <div class="modal-content modal-content-wide border-t-4 border-emerald-500">
+        <div class="modal-content modal-content-wide border-t-4 border-emerald-500 w-11/12">
             <span class="close-modal" onclick="closeEditPastTripModal()">&times;</span>
-            <h3 class="text-xl font-bold text-slate-800 mb-2"><i class="fa-solid fa-road text-emerald-500 mr-2"></i>Seferi Düzelt</h3>
-            <p class="text-xs text-slate-500 mb-4 border-b pb-4">Tüm sefer bilgilerini güncelleyebilirsiniz. Toplam KM otomatik hesaplanır.</p>
+            <h3 class="text-xl font-bold text-slate-800 mb-2 mt-2"><i class="fa-solid fa-road text-emerald-500 mr-2"></i>Seferi Düzelt</h3>
+            <p class="text-xs text-slate-500 mb-4 border-b pb-4 pr-6">Tüm sefer bilgilerini güncelleyebilirsiniz. Toplam KM otomatik hesaplanır.</p>
             <form id="editPastTripForm" onsubmit="savePastTripEdit(event); return false;" class="space-y-3">
                 <input type="hidden" id="editPastTripId">
-                <div class="flex gap-2">
-                    <div class="w-1/2">
+                <div class="flex flex-col sm:flex-row gap-2">
+                    <div class="w-full sm:w-1/2">
                         <label class="text-[10px] font-bold text-slate-500 ml-1">Sefer / Dosya No</label>
                         <input type="text" id="editPastTripNo" required class="input-style border border-slate-200 mt-1 font-bold text-indigo-600">
                     </div>
-                    <div class="w-1/2">
+                    <div class="w-full sm:w-1/2">
                         <label class="text-[10px] font-bold text-slate-500 ml-1">Güzergah</label>
                         <input type="text" id="editPastTripRoute" required class="input-style border border-slate-200 mt-1">
                     </div>
                 </div>
-                <div class="flex gap-2">
-                    <div class="w-1/2">
+                <div class="flex flex-col sm:flex-row gap-2">
+                    <div class="w-full sm:w-1/2">
                         <label class="text-[10px] font-bold text-slate-500 ml-1">Çekici Plaka</label>
                         <input type="text" id="editPastTripPlate" required class="input-style border border-slate-200 mt-1 uppercase">
                     </div>
-                    <div class="w-1/2">
+                    <div class="w-full sm:w-1/2">
                         <label class="text-[10px] font-bold text-slate-500 ml-1">Dorse Plaka</label>
                         <input type="text" id="editPastTripTrailer" class="input-style border border-slate-200 mt-1 uppercase">
                     </div>
                 </div>
-                <div class="flex gap-2 bg-slate-50 p-3 rounded-xl border border-slate-200">
-                    <div class="w-1/2">
+                <div class="flex flex-col sm:flex-row gap-2 bg-slate-50 p-3 rounded-xl border border-slate-200">
+                    <div class="w-full sm:w-1/2">
                         <label class="text-[10px] font-bold text-slate-500 ml-1">Başlangıç KM'si</label>
                         <input type="number" id="editPastStartKm" required class="input-style border border-slate-200 mt-1 font-bold">
                     </div>
-                    <div class="w-1/2">
+                    <div class="w-full sm:w-1/2">
                         <label class="text-[10px] font-bold text-emerald-600 ml-1">Bitiş KM'si</label>
                         <input type="number" id="editPastEndKm" required class="input-style border border-emerald-200 mt-1 font-bold text-emerald-600">
                     </div>
@@ -519,8 +530,8 @@
     </div>
 
     <!-- BİLDİRİM / TOAST -->
-    <div id="toast" class="fixed bottom-5 left-1/2 transform -translate-x-1/2 translate-y-20 opacity-0 transition-all duration-300 z-50 pointer-events-none">
-        <div class="bg-slate-800 text-white px-5 py-3 rounded-full shadow-2xl flex items-center gap-3 font-medium text-sm"><i id="toast-icon" class="fa-solid fa-circle-check text-emerald-400"></i><span id="toast-msg"></span></div>
+    <div id="toast" class="fixed bottom-5 left-1/2 transform -translate-x-1/2 translate-y-20 opacity-0 transition-all duration-300 z-50 pointer-events-none w-[90%] max-w-sm text-center flex justify-center">
+        <div class="bg-slate-800 text-white px-5 py-3 rounded-full shadow-2xl flex items-center gap-3 font-medium text-sm w-fit"><i id="toast-icon" class="fa-solid fa-circle-check text-emerald-400"></i><span id="toast-msg"></span></div>
     </div>
 
     <!-- KUSURSUZ PDF ŞABLONU (Gizli) -->
@@ -618,13 +629,11 @@
             loggedInUser = matched; currentRole = loggedInUser.role;
             document.getElementById('loginScreen').style.display = 'none'; document.body.classList.remove('overflow-hidden'); document.getElementById('mainHeader').classList.remove('opacity-0'); document.getElementById('mainContent').classList.remove('opacity-0');
             
-            if(currentRole === 'PATRON') { document.getElementById('appBody').classList.add('patron-active'); } else { document.getElementById('appBody').classList.remove('patron-active'); }
-
             updateDriverDropdowns(); updateTabVisibility();
 
             if(currentRole === 'ADMIN') { document.getElementById('modeText').innerText = "YÖNETİCİ MODU"; document.getElementById('modeText').className = "text-[10px] font-bold tracking-wide text-rose-500"; currentUser = getDrivers()[0] || loggedInUser.username; switchTab('DASHBOARD'); } 
             else if(currentRole === 'OPS') { document.getElementById('modeText').innerText = "OPERASYON MODU"; document.getElementById('modeText').className = "text-[10px] font-bold tracking-wide text-emerald-600"; currentUser = getDrivers()[0] || loggedInUser.username; switchTab('OPERATIONS'); } 
-            else if(currentRole === 'PATRON') { document.getElementById('modeText').innerText = "PATRON (İZLEME) MODU"; document.getElementById('modeText').className = "text-[10px] font-bold tracking-wide text-amber-500"; currentUser = getDrivers()[0] || loggedInUser.username; switchTab('PATRON'); } 
+            else if(currentRole === 'PATRON') { document.getElementById('modeText').innerText = "PATRON MODU"; document.getElementById('modeText').className = "text-[10px] font-bold tracking-wide text-amber-500"; currentUser = getDrivers()[0] || loggedInUser.username; switchTab('PATRON'); } 
             else { document.getElementById('modeText').innerText = "ŞOFÖR MODU"; document.getElementById('modeText').className = "text-[10px] font-bold tracking-wide text-primary"; currentUser = loggedInUser.username; switchTab('DRIVER'); checkActiveTrip(); }
             renderAll(); return false;
         }
@@ -642,12 +651,12 @@
             const isDriver = currentRole === 'DRIVER'; const isOps = currentRole === 'OPS'; const isAdmin = currentRole === 'ADMIN'; const isPatron = currentRole === 'PATRON';
 
             document.getElementById('tab-DRIVER').style.display = 'flex';
-            document.getElementById('tab-OPERATIONS').style.display = isDriver ? 'none' : 'flex';
+            document.getElementById('tab-OPERATIONS').style.display = (isAdmin || isPatron || isOps) ? 'flex' : 'none';
             document.getElementById('tab-ACCOUNTING').style.display = (isAdmin || isPatron) ? 'flex' : 'none';
             document.getElementById('tab-DASHBOARD').style.display = (isAdmin || isPatron || isOps) ? 'flex' : 'none';
             document.getElementById('tab-USERS').style.display = (isAdmin || isPatron) ? 'flex' : 'none';
             document.getElementById('tab-PATRON').style.display = (isAdmin || isPatron) ? 'flex' : 'none';
-            document.getElementById('tab-ANALYTICS').style.display = (isAdmin || isOps) ? 'flex' : 'none';
+            document.getElementById('tab-ANALYTICS').style.display = (isAdmin || isPatron || isOps) ? 'flex' : 'none';
         }
 
         function switchTab(tabId) { 
@@ -670,26 +679,15 @@
             if (!confirm("Tüm muhasebe dökümü (Avanslar ve Onaylı Masraflar) Excel (CSV) olarak indirilecek. Onaylıyor musunuz?")) return;
             
             let rows = [];
-            
-            // Başlıklar (Sütunlar)
             rows.push(["Tarih", "Personel Adi", "Islem Tipi", "Kategori", "Aciklama", "Dosya_Sefer No", "Tutar", "Para Birimi", "Plaka", "KM"].join(";"));
 
-            // Avanslar (Giriş)
-            advances.forEach(a => {
-                rows.push([a.date, `"${a.driver}"`, "AVANS (KASAYA GIRIS)", "-", "Merkezden Avans", "-", a.amount, a.currency, "-", "-"].join(";"));
-            });
+            advances.forEach(a => { rows.push([a.date, `"${a.driver}"`, "AVANS (KASAYA GIRIS)", "-", "Merkezden Avans", "-", a.amount, a.currency, "-", "-"].join(";")); });
+            expenses.filter(e => e.status === 'APPROVED').forEach(e => { rows.push([e.date, `"${e.driver}"`, "MASRAF (KASADAN CIKIS)", e.category, `"${e.tripName}"`, `"${e.tripId || '-'}"`, e.amount, e.currency, `"${e.plaka || '-'}"`, `"${e.km || '-'}"`].join(";")); });
 
-            // Masraflar (Çıkış)
-            expenses.filter(e => e.status === 'APPROVED').forEach(e => {
-                rows.push([e.date, `"${e.driver}"`, "MASRAF (KASADAN CIKIS)", e.category, `"${e.tripName}"`, `"${e.tripId || '-'}"`, e.amount, e.currency, `"${e.plaka || '-'}"`, `"${e.km || '-'}"`].join(";"));
-            });
-
-            // Satırları tarihe göre sırala (Başlık hariç)
             let header = rows.shift();
             rows.sort((a, b) => new Date(a.split(";")[0]) - new Date(b.split(";")[0]));
             rows.unshift(header);
 
-            // Türkçe karakter desteği için BOM (\uFEFF) ekliyoruz
             let csvContent = "\uFEFF" + rows.join("\n");
             
             const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
@@ -826,7 +824,7 @@
         }
 
         // ==========================================
-        // YENİ: MASRAF VE AVANS DÜZELTME FONKSİYONLARI
+        // MASRAF VE AVANS DÜZELTME FONKSİYONLARI
         // ==========================================
         function toggleVehicleFields() { const val = document.getElementById('category').value; const f = document.getElementById('vehicleFields'); (val === 'MAZOT' || val === 'BAKIM' || val === 'OTOYOL' || val === 'GUMRUK') ? f.classList.remove('hidden') : f.classList.add('hidden'); }
         function submitExpense(e) { 
@@ -846,7 +844,6 @@
         function opApprove(id) { const tId = document.getElementById('tripNo_'+id).value; if(!tId) { alert("Dosya/Sefer No girmelisiniz!"); return; } const exp = expenses.find(e => e.id === id); exp.tripId = tId; exp.status = 'APPROVED'; addLog('Masraf Onaylandı', exp.driver, exp.amount, exp.currency, 'approved'); saveData(); showToast('Onaylandı', 'success'); }
         function opReject(id) { const exp = expenses.find(e => e.id === id); exp.status = 'REJECTED'; addLog('Masraf Reddedildi', exp.driver, exp.amount, exp.currency, 'rejected'); saveData(); showToast('Reddedildi', 'error'); }
         
-        // Hem bekleyen hem onaylanan masraflar için ortak düzeltme
         function editExpense(id) {
             const exp = expenses.find(e => e.id === id); if(!exp) return;
             const newAmt = prompt(`Masraf Tutarını Düzenle (${exp.currency}):`, exp.amount);
@@ -858,7 +855,6 @@
             }
         }
         
-        // Avans Düzeltme & Silme
         function giveAdvance(e) { if(e) e.preventDefault(); advances.push({ id: Date.now(), date: new Date().toISOString().split('T')[0], driver: document.getElementById('advDriver').value, amount: parseFloat(document.getElementById('advAmount').value), currency: document.getElementById('advCur').value }); showToast('Avans Verildi', 'success'); document.getElementById('advanceForm').reset(); saveData(); return false; }
         
         function editAdvance(id) {
@@ -875,7 +871,7 @@
         function getDriverBalance(drv) { let e=0, u=0, t=0; advances.filter(a => a.driver === drv).forEach(a => { if(a.currency==='EUR') e+=a.amount; else if(a.currency==='USD') u+=a.amount; else t+=a.amount; }); expenses.filter(x => x.driver === drv && x.status === 'APPROVED').forEach(x => { if(x.currency==='EUR') e-=x.amount; else if(x.currency==='USD') u-=x.amount; else t-=x.amount; }); return { e:e, u:u, t:t }; }
 
         // ==========================================
-        // İLERİ SEVİYE PATRON DASHBOARD
+        // PATRON DASHBOARD
         // ==========================================
         function updatePatronDashboard() {
             let totSafeE = 0, totSafeU = 0, totSafeT = 0; let riskyCount = 0; let activeTripsCount = driverTrips.filter(t => t.status === 'ACTIVE').length;
@@ -931,10 +927,8 @@
             let completed = driverTrips.filter(t => t.status === 'COMPLETED').sort((a,b) => b.endDate.localeCompare(a.endDate));
             if(searchVal) completed = completed.filter(t => (t.tripNo||'').toLowerCase().includes(searchVal) || (t.driver||'').toLowerCase().includes(searchVal) || (t.route||'').toLowerCase().includes(searchVal) || (t.plate||'').toLowerCase().includes(searchVal));
             completed.forEach(t => {
-                let actionBtns = (currentRole === 'ADMIN' || currentRole === 'OPS') 
-                    ? `<button onclick="openEditPastTripModal(${t.id})" class="text-blue-600 bg-blue-50 hover:bg-blue-100 border border-blue-200 w-8 h-8 rounded-lg transition shadow-sm" title="Seferi Düzelt"><i class="fa-solid fa-pen text-xs"></i></button><button onclick="deleteTrip(${t.id})" class="text-rose-600 bg-rose-50 hover:bg-rose-100 border border-rose-200 w-8 h-8 rounded-lg transition shadow-sm ml-1" title="Seferi Sil"><i class="fa-solid fa-trash text-xs"></i></button>` 
-                    : '';
-                list.innerHTML += `<tr class="border-b border-slate-100 hover:bg-slate-50 transition"><td class="p-4 text-xs font-bold text-slate-500">${t.endDate}</td><td class="p-4 font-bold text-slate-800">${t.tripNo}</td><td class="p-4 font-bold text-slate-800"><i class="fa-solid fa-user text-slate-300 mr-2"></i>${t.driver}</td><td class="p-4 text-slate-600 font-medium">${t.route}</td><td class="p-4"><span class="bg-indigo-50 text-indigo-700 border border-indigo-200 px-2 py-1 rounded text-xs font-bold uppercase">${t.plate}</span> <span class="text-slate-400 text-xs mx-1">/</span> <span class="text-[10px] font-bold text-slate-500 uppercase">${t.trailer||'YOK'}</span></td><td class="p-4 text-right font-bold text-emerald-600 bg-emerald-50">${t.totalKm.toLocaleString()} KM</td><td class="p-4 text-center hide-from-patron flex justify-center gap-1">${actionBtns}</td></tr>`;
+                let actionBtns = `<button onclick="openEditPastTripModal(${t.id})" class="text-blue-600 bg-blue-50 hover:bg-blue-100 border border-blue-200 w-8 h-8 rounded-lg transition shadow-sm" title="Seferi Düzelt"><i class="fa-solid fa-pen text-xs"></i></button><button onclick="deleteTrip(${t.id})" class="text-rose-600 bg-rose-50 hover:bg-rose-100 border border-rose-200 w-8 h-8 rounded-lg transition shadow-sm ml-1" title="Seferi Sil"><i class="fa-solid fa-trash text-xs"></i></button>`; 
+                list.innerHTML += `<tr class="border-b border-slate-100 hover:bg-slate-50 transition"><td class="p-4 text-xs font-bold text-slate-500">${t.endDate}</td><td class="p-4 font-bold text-slate-800">${t.tripNo}</td><td class="p-4 font-bold text-slate-800"><i class="fa-solid fa-user text-slate-300 mr-2"></i>${t.driver}</td><td class="p-4 text-slate-600 font-medium">${t.route}</td><td class="p-4"><span class="bg-indigo-50 text-indigo-700 border border-indigo-200 px-2 py-1 rounded text-xs font-bold uppercase">${t.plate}</span> <span class="text-slate-400 text-xs mx-1">/</span> <span class="text-[10px] font-bold text-slate-500 uppercase">${t.trailer||'YOK'}</span></td><td class="p-4 text-right font-bold text-emerald-600 bg-emerald-50">${t.totalKm.toLocaleString()} KM</td><td class="p-4 text-center flex justify-center gap-1">${actionBtns}</td></tr>`;
             });
             if(completed.length === 0) list.innerHTML = `<tr><td colspan="7" class="p-6 text-center text-slate-500 border border-dashed rounded-xl">Biten sefer bulunamadı.</td></tr>`;
         }
@@ -970,19 +964,19 @@
                 if(opList) { 
                     opList.innerHTML = ''; 
                     expenses.filter(e => e.status === 'PENDING_OP').forEach(e => { 
-                        let tripInput = currentRole === 'PATRON' ? '<span class="text-slate-400">-</span>' : `<input type="text" id="tripNo_${e.id}" class="input-style w-24 px-2 py-1 text-xs" placeholder="Sefer No">`; 
-                        let actionBtns = currentRole === 'PATRON' ? `<span class="text-[10px] font-bold text-slate-400 bg-slate-100 px-2 py-1 rounded">Sadece İzleme</span>` : `<button onclick="opApprove(${e.id})" class="bg-emerald-100 text-emerald-700 w-8 h-8 rounded-lg shadow-sm hover:bg-emerald-200 transition" title="Onayla"><i class="fa-solid fa-check"></i></button><button onclick="editExpense(${e.id})" class="bg-blue-100 text-blue-700 w-8 h-8 rounded-lg shadow-sm hover:bg-blue-200 transition" title="Tutar Düzenle"><i class="fa-solid fa-pen"></i></button><button onclick="opReject(${e.id})" class="bg-rose-100 text-rose-700 w-8 h-8 rounded-lg shadow-sm hover:bg-rose-200 transition" title="Reddet"><i class="fa-solid fa-xmark"></i></button><button onclick="deleteExpense(${e.id})" class="bg-red-100 text-red-700 w-8 h-8 rounded-lg shadow-sm hover:bg-red-200 transition ml-1" title="Sil"><i class="fa-solid fa-trash"></i></button>`; 
+                        let tripInput = `<input type="text" id="tripNo_${e.id}" class="input-style w-24 px-2 py-1 text-xs" placeholder="Sefer No">`; 
+                        let actionBtns = `<button onclick="opApprove(${e.id})" class="bg-emerald-100 text-emerald-700 w-8 h-8 rounded-lg shadow-sm hover:bg-emerald-200 transition" title="Onayla"><i class="fa-solid fa-check"></i></button><button onclick="editExpense(${e.id})" class="bg-blue-100 text-blue-700 w-8 h-8 rounded-lg shadow-sm hover:bg-blue-200 transition" title="Tutar Düzenle"><i class="fa-solid fa-pen"></i></button><button onclick="opReject(${e.id})" class="bg-rose-100 text-rose-700 w-8 h-8 rounded-lg shadow-sm hover:bg-rose-200 transition" title="Reddet"><i class="fa-solid fa-xmark"></i></button><button onclick="deleteExpense(${e.id})" class="bg-red-100 text-red-700 w-8 h-8 rounded-lg shadow-sm hover:bg-red-200 transition ml-1" title="Sil"><i class="fa-solid fa-trash"></i></button>`; 
                         opList.innerHTML += `<tr class="hover:bg-slate-50 border-b border-slate-100 transition"><td class="p-4"><p class="font-bold text-slate-800">${e.driver}</p><p class="text-[10px] text-slate-500">${e.date}</p></td><td class="p-4"><p class="font-semibold text-sm">${catIcons[e.category]} ${e.category}</p><p class="text-xs text-slate-500">${e.tripName}</p></td><td class="p-4 text-primary text-base">${formatMoney(e.amount, e.currency)}</td><td class="p-4">${tripInput}</td><td class="p-4 text-right flex justify-end gap-1">${actionBtns}</td></tr>`; 
                     }); 
                 }
 
-                // YENİ: ONAYLI MASRAFLAR İÇİN DÜZELTME LİSTESİ
+                // ONAYLI MASRAFLAR İÇİN DÜZELTME LİSTESİ
                 const appList = document.getElementById('approvedOperationsList');
                 if(appList) {
                     appList.innerHTML = '';
                     let recentApp = expenses.filter(e => e.status === 'APPROVED').slice(0, 40);
                     recentApp.forEach(e => {
-                        let actionBtns = currentRole === 'PATRON' ? `<span class="text-[10px] font-bold text-slate-400 bg-slate-100 px-2 py-1 rounded">İzleme</span>` : `<button onclick="editExpense(${e.id})" class="bg-blue-100 text-blue-700 w-8 h-8 rounded-lg shadow-sm hover:bg-blue-200 transition" title="Tutarı Düzelt"><i class="fa-solid fa-pen"></i></button><button onclick="deleteExpense(${e.id})" class="bg-rose-100 text-rose-700 w-8 h-8 rounded-lg shadow-sm hover:bg-rose-200 ml-1 transition" title="Masrafı Sil"><i class="fa-solid fa-trash"></i></button>`;
+                        let actionBtns = `<button onclick="editExpense(${e.id})" class="bg-blue-100 text-blue-700 w-8 h-8 rounded-lg shadow-sm hover:bg-blue-200 transition" title="Tutarı Düzelt"><i class="fa-solid fa-pen"></i></button><button onclick="deleteExpense(${e.id})" class="bg-rose-100 text-rose-700 w-8 h-8 rounded-lg shadow-sm hover:bg-rose-200 ml-1 transition" title="Masrafı Sil"><i class="fa-solid fa-trash"></i></button>`;
                         appList.innerHTML += `<tr class="hover:bg-slate-50 border-b border-slate-100 transition"><td class="p-4 font-bold">${e.driver}<br><span class="text-[10px] font-normal text-slate-400">${e.date}</span></td><td class="p-4 text-sm font-semibold">${catIcons[e.category]||'📝'} ${e.tripName} <span class="text-[10px] text-slate-400 block mt-0.5">Dosya: ${e.tripId||'-'}</span></td><td class="p-4 text-emerald-600 font-bold">${formatMoney(e.amount, e.currency)}</td><td class="p-4 text-right flex justify-end gap-1">${actionBtns}</td></tr>`;
                     });
                     if(recentApp.length === 0) appList.innerHTML = `<tr><td colspan="4" class="p-4 text-center text-slate-500">Onaylı masraf bulunmuyor.</td></tr>`;
@@ -1011,7 +1005,7 @@
                     advList.innerHTML = '';
                     let recentAdv = [...advances].sort((a,b) => b.id - a.id).slice(0, 15); 
                     recentAdv.forEach(a => {
-                        let actionBtns = currentRole === 'PATRON' ? '-' : `<button onclick="editAdvance(${a.id})" class="bg-blue-50 text-blue-600 hover:bg-blue-100 w-7 h-7 rounded-md mr-1 transition" title="Düzelt"><i class="fa-solid fa-pen text-[10px]"></i></button><button onclick="deleteAdvance(${a.id})" class="bg-rose-50 text-rose-600 hover:bg-rose-100 w-7 h-7 rounded-md transition" title="Sil"><i class="fa-solid fa-trash text-[10px]"></i></button>`;
+                        let actionBtns = `<button onclick="editAdvance(${a.id})" class="bg-blue-50 text-blue-600 hover:bg-blue-100 w-7 h-7 rounded-md mr-1 transition" title="Düzelt"><i class="fa-solid fa-pen text-[10px]"></i></button><button onclick="deleteAdvance(${a.id})" class="bg-rose-50 text-rose-600 hover:bg-rose-100 w-7 h-7 rounded-md transition" title="Sil"><i class="fa-solid fa-trash text-[10px]"></i></button>`;
                         advList.innerHTML += `<tr class="hover:bg-slate-50 border-b border-slate-100 transition"><td class="p-2 text-[10px] text-slate-400">${a.date}</td><td class="p-2 font-bold">${a.driver}</td><td class="p-2 font-bold text-emerald-600">${formatMoney(a.amount, a.currency)}</td><td class="p-2 text-right">${actionBtns}</td></tr>`;
                     });
                     if(recentAdv.length === 0) advList.innerHTML = `<tr><td colspan="4" class="p-4 text-center text-slate-500">Kayıtlı avans bulunmuyor.</td></tr>`;
@@ -1024,8 +1018,8 @@
                         let roleClass = u.role === 'ADMIN' ? 'bg-rose-100 text-rose-700' : (u.role === 'OPS' ? 'bg-emerald-100 text-emerald-700' : (u.role === 'PATRON' ? 'bg-amber-100 text-amber-700' : 'bg-indigo-100 text-indigo-700'));
                         let statusBadge = u.isBlocked ? '<span class="bg-red-100 text-red-700 px-2 py-1 rounded text-[10px] font-bold uppercase"><i class="fa-solid fa-lock mr-1"></i>Kısıtlı</span>' : '<span class="bg-green-100 text-green-700 px-2 py-1 rounded text-[10px] font-bold uppercase">Aktif</span>';
                         let pTxt = u.role === 'DRIVER' ? `<span class="bg-slate-100 border border-slate-200 px-2 py-1 rounded text-[10px] font-bold text-slate-600">${u.defaultPlate||'Yok'} / ${u.defaultTrailer||'Yok'}</span>` : '<span class="text-slate-300">-</span>'; 
-                        let blockBtn = (currentRole === 'PATRON' || u.username === 'Tanju') ? '' : `<button onclick="toggleUserStatus(${u.id})" class="${u.isBlocked ? 'bg-green-50 text-green-600 hover:bg-green-100' : 'bg-orange-50 text-orange-600 hover:bg-orange-100'} w-8 h-8 rounded-lg transition mr-1" title="${u.isBlocked ? 'Kilidi Aç' : 'Kısıtla'}"><i class="fa-solid ${u.isBlocked ? 'fa-unlock' : 'fa-lock'}"></i></button>`;
-                        let delBtn = currentRole === 'PATRON' ? '' : (u.username === 'Tanju' ? '<span class="text-[10px] text-slate-400 font-bold bg-slate-100 px-2 py-1 rounded">Kurucu</span>' : `<button onclick="deleteUser(${u.id})" class="bg-red-50 text-red-600 w-8 h-8 rounded-lg hover:bg-red-100 transition"><i class="fa-solid fa-trash"></i></button>`);
+                        let blockBtn = u.username === 'Tanju' ? '' : `<button onclick="toggleUserStatus(${u.id})" class="${u.isBlocked ? 'bg-green-50 text-green-600 hover:bg-green-100' : 'bg-orange-50 text-orange-600 hover:bg-orange-100'} w-8 h-8 rounded-lg transition mr-1" title="${u.isBlocked ? 'Kilidi Aç' : 'Kısıtla'}"><i class="fa-solid ${u.isBlocked ? 'fa-unlock' : 'fa-lock'}"></i></button>`;
+                        let delBtn = u.username === 'Tanju' ? '<span class="text-[10px] text-slate-400 font-bold bg-slate-100 px-2 py-1 rounded">Kurucu</span>' : `<button onclick="deleteUser(${u.id})" class="bg-red-50 text-red-600 w-8 h-8 rounded-lg hover:bg-red-100 transition"><i class="fa-solid fa-trash"></i></button>`;
                         return `<tr class="hover:bg-slate-50 border-b border-slate-100 transition"><td class="p-3 font-bold text-slate-800"><i class="fa-solid fa-circle-user text-slate-300 mr-2 text-lg align-middle"></i>${u.username}</td><td class="p-3 text-xs">${pTxt}</td><td class="p-3"><span class="${roleClass} px-2 py-1 rounded text-[10px] font-bold uppercase">${roleName}</span></td><td class="p-3 text-center">${statusBadge}</td><td class="p-3 text-right flex justify-end">${blockBtn}${delBtn}</td></tr>`;
                     }).join('');
                 }
@@ -1075,18 +1069,15 @@
         function renderAnalyticsTab() {
             renderDebtBalanceList();
             renderSystemLog();
-            // Şoför performans select'ini doldur
             const sel = document.getElementById('perfDriverSelect');
             if(sel) {
                 sel.innerHTML = '<option value="">-- Şoför Seç --</option>';
                 getDrivers().forEach(d => { sel.innerHTML += `<option value="${d}">${d}</option>`; });
             }
-            // Ay inputunu bu ay yap (boşsa)
             const mInput = document.getElementById('monthlyReportMonth');
             if(mInput && !mInput.value) mInput.value = new Date().toISOString().slice(0,7);
         }
 
-        // --- BORÇ/ALACAK EKSTRESİ ---
         function renderDebtBalanceList() {
             const tbody = document.getElementById('debtBalanceList'); if(!tbody) return;
             tbody.innerHTML = '';
@@ -1098,7 +1089,6 @@
                 expenses.filter(x => x.driver === drv && x.status === 'APPROVED').forEach(x => { if(x.currency==='EUR') expE+=x.amount; else if(x.currency==='USD') expU+=x.amount; else expT+=x.amount; });
                 const netE = advE-expE, netU = advU-expU, netT = advT-expT;
 
-                // Son 30 gün masraf
                 let r30E=0, r30U=0, r30T=0;
                 expenses.filter(x => x.driver === drv && x.status === 'APPROVED' && new Date(x.date) >= ago30).forEach(x => { if(x.currency==='EUR') r30E+=x.amount; else if(x.currency==='USD') r30U+=x.amount; else r30T+=x.amount; });
 
@@ -1127,7 +1117,6 @@
             if(tbody.innerHTML === '') tbody.innerHTML = `<tr><td colspan="6" class="p-4 text-center text-slate-500">Kayıtlı şoför bulunamadı.</td></tr>`;
         }
 
-        // --- ŞOFÖR PERFORMANS KARTI ---
         function renderPerformanceCard() {
             const drv = document.getElementById('perfDriverSelect').value;
             const body = document.getElementById('performanceCardBody');
@@ -1175,7 +1164,6 @@
                 </div>`;
         }
 
-        // --- AYLIK ÖZET RAPORU ---
         function renderMonthlyReport() {
             const monthVal = document.getElementById('monthlyReportMonth').value;
             const body = document.getElementById('monthlyReportBody');
@@ -1194,7 +1182,6 @@
             const totalKm = mTrips.reduce((s,t) => s+t.totalKm, 0);
             const uniqueDrivers = [...new Set(mExpenses.map(e=>e.driver))].length;
 
-            // Kategori dağılımı
             let catSums = {}; 
             mExpenses.forEach(e => { 
                 if(!catSums[e.category]) catSums[e.category] = {e:0,u:0,t:0}; 
@@ -1229,23 +1216,13 @@
                 </div>`;
         }
 
-        // --- SİSTEM LOG ---
         function renderSystemLog() {
             const tbody = document.getElementById('systemLogList'); if(!tbody) return;
-            // Log + onaylı masrafları birleştir
             let logs = [];
-            expenses.filter(e => e.status === 'APPROVED').forEach(e => {
-                logs.push({ date: e.date, action: 'Masraf Onaylandı', driver: e.driver, amount: e.amount, currency: e.currency, status: 'approved' });
-            });
-            expenses.filter(e => e.status === 'REJECTED').forEach(e => {
-                logs.push({ date: e.date, action: 'Masraf Reddedildi', driver: e.driver, amount: e.amount, currency: e.currency, status: 'rejected' });
-            });
-            advances.forEach(a => {
-                logs.push({ date: a.date, action: 'Avans Verildi', driver: a.driver, amount: a.amount, currency: a.currency, status: 'advance' });
-            });
-            driverTrips.filter(t => t.status === 'COMPLETED').forEach(t => {
-                logs.push({ date: t.endDate, action: 'Sefer Tamamlandı', driver: t.driver, amount: t.totalKm, currency: 'KM', status: 'trip' });
-            });
+            expenses.filter(e => e.status === 'APPROVED').forEach(e => { logs.push({ date: e.date, action: 'Masraf Onaylandı', driver: e.driver, amount: e.amount, currency: e.currency, status: 'approved' }); });
+            expenses.filter(e => e.status === 'REJECTED').forEach(e => { logs.push({ date: e.date, action: 'Masraf Reddedildi', driver: e.driver, amount: e.amount, currency: e.currency, status: 'rejected' }); });
+            advances.forEach(a => { logs.push({ date: a.date, action: 'Avans Verildi', driver: a.driver, amount: a.amount, currency: a.currency, status: 'advance' }); });
+            driverTrips.filter(t => t.status === 'COMPLETED').forEach(t => { logs.push({ date: t.endDate, action: 'Sefer Tamamlandı', driver: t.driver, amount: t.totalKm, currency: 'KM', status: 'trip' }); });
             logs.sort((a,b) => (b.date||'').localeCompare(a.date||'')); logs = logs.slice(0, 50);
             tbody.innerHTML = '';
             logs.forEach(l => {
@@ -1255,7 +1232,6 @@
             if(tbody.innerHTML === '') tbody.innerHTML = `<tr><td colspan="5" class="p-4 text-center text-slate-500">Kayıt bulunamadı.</td></tr>`;
         }
 
-        // --- ŞİFRE DEĞİŞTİRME ---
         function changePassword(e) {
             if(e) e.preventDefault();
             const old = document.getElementById('oldPass').value;
